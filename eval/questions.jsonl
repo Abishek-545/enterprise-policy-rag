@@ -1,0 +1,5 @@
+{"question":"How many vacation days can a full-time employee carry over?","expected_sources":["leave_and_vacation_policy.pdf"]}
+{"question":"How should security incidents be reported?","expected_sources":["security_and_data_protection_policy.pdf"]}
+{"question":"What expense amount requires manager approval?","expected_sources":["travel_and_expense_policy.pdf"]}
+{"question":"What should employees do during an emergency evacuation?","expected_sources":["workplace_safety_policy.pdf"]}
+{"question":"What gifts from vendors require Legal review?","expected_sources":["employee_code_of_conduct.pdf"]}

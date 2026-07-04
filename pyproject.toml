@@ -1,0 +1,13 @@
+[project]
+name = "enterprise-policy-rag"
+version = "0.1.0"
+description = "Production-style enterprise policy RAG assistant with Groq, Chroma, citations, evaluation, and Streamlit UI."
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "app", "tests"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
