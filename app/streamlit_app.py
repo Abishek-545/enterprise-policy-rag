@@ -94,7 +94,10 @@ pdf_count = len(list(SAMPLE_DOCS.glob("*.pdf"))) if SAMPLE_DOCS.exists() else 0
 def ensure_default_index() -> str:
     settings = get_settings()
     store = ChromaVectorStore(settings)
-    if pdf_count and store.is_empty():
+    index_is_empty = store.is_empty()
+    store.close()
+
+    if pdf_count and index_is_empty:
         result = ingest_directory(SAMPLE_DOCS, reset=True)
         return f"Ready: indexed {result.files_processed} PDFs into {result.chunks_created} chunks."
     return "Ready: policy index loaded."

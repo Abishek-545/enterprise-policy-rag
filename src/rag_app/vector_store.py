@@ -81,6 +81,9 @@ class QdrantVectorStore:
             )
         return chunks
 
+    def close(self) -> None:
+        self.client.close()
+
     @property
     def persist_path(self) -> Path:
         return self.settings.persist_dir
