@@ -56,6 +56,10 @@ class QdrantVectorStore:
             )
         self.client.upsert(collection_name=self.settings.collection_name, points=points)
 
+    def is_empty(self) -> bool:
+        count_result = self.client.count(collection_name=self.settings.collection_name, exact=True)
+        return count_result.count == 0
+
     def search(self, query: str, top_k: int) -> list[RetrievedChunk]:
         vector = self.embedding_model.encode(query, normalize_embeddings=True).tolist()
         results = self.client.search(

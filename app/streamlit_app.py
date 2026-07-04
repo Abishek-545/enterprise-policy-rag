@@ -1,9 +1,19 @@
+import os
 from pathlib import Path
 
 import streamlit as st
 
+try:
+    for key in ("GROQ_API_KEY", "GROQ_MODEL", "EMBEDDING_MODEL", "TOP_K"):
+        if key in st.secrets and not os.getenv(key):
+            os.environ[key] = str(st.secrets[key])
+except Exception:
+    pass
+
+from rag_app.config import get_settings
 from rag_app.ingest import ingest_directory
 from rag_app.pipeline import answer_question
+from rag_app.vector_store import ChromaVectorStore
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_DOCS = PROJECT_ROOT / "data" / "sample_docs"
@@ -74,11 +84,25 @@ st.markdown(
 
 pdf_count = len(list(SAMPLE_DOCS.glob("*.pdf"))) if SAMPLE_DOCS.exists() else 0
 
+
+@st.cache_resource(show_spinner=False)
+def ensure_default_index() -> str:
+    settings = get_settings()
+    store = ChromaVectorStore(settings)
+    if pdf_count and store.is_empty():
+        result = ingest_directory(SAMPLE_DOCS, reset=True)
+        return f"Ready: indexed {result.files_processed} PDFs into {result.chunks_created} chunks."
+    return "Ready: policy index loaded."
+
+
+index_status = ensure_default_index()
+
 with st.sidebar:
     st.subheader("Knowledge Base")
     st.metric("Policy PDFs", pdf_count)
     st.caption("Vector DB: Qdrant local mode")
     st.caption("LLM: Groq")
+    st.caption(index_status)
 
     uploaded_files = st.file_uploader(
         "Upload more policy documents",
