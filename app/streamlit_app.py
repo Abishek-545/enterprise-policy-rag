@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import streamlit as st
@@ -10,12 +11,16 @@ try:
 except Exception:
     pass
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_DIR = PROJECT_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
 from rag_app.config import get_settings
 from rag_app.ingest import ingest_directory
 from rag_app.pipeline import answer_question
 from rag_app.vector_store import ChromaVectorStore
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_DOCS = PROJECT_ROOT / "data" / "sample_docs"
 
 CAPABILITIES = [
